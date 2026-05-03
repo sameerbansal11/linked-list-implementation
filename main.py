@@ -10,6 +10,7 @@ College: SRM Institute of Science and Technology
 Branch: B.Tech CSE (IoT) | Batch: 2023-2027
 """
 
+from __future__ import annotations
 import os
 from typing import Optional
 
@@ -30,53 +31,51 @@ BLUE = "\033[94m"
 class SNode:
     """Node for Singly Linked List"""
 
-    def __init__(self, data):
-        self.data = data
-        self.nxt: Optional["SNode"] = None
+    def __init__(self, data: int) -> None:
+        self.data: int = data
+        self.nxt: Optional[SNode] = None
 
 
 class SinglyLinkedList:
-    def __init__(self):
-        self.head = None
-        self.size = 0
+    def __init__(self) -> None:
+        self.head: Optional[SNode] = None
+        self.size: int = 0
 
     # ── Insert ────────────────────────────────────────────
-    def insert_at_beginning(self, data):
+    def insert_at_beginning(self, data: int) -> str:
         node = SNode(data)
         node.nxt = self.head
         self.head = node
         self.size += 1
         return f"{GREEN}✅ Inserted {data} at beginning{RESET}"
 
-    def insert_at_end(self, data):
+    def insert_at_end(self, data: int) -> str:
         node = SNode(data)
         if not self.head:
             self.head = node
         else:
-            curr = self.head
+            curr: SNode = self.head
             while curr.nxt:
                 curr = curr.nxt
             curr.nxt = node
         self.size += 1
         return f"{GREEN}✅ Inserted {data} at end{RESET}"
 
-    def insert_at_position(self, data, pos):
+    def insert_at_position(self, data: int, pos: int) -> str:
         if pos < 0 or pos > self.size:
             return f"{RED}❌ Invalid position: {pos} (size={self.size}){RESET}"
         if pos == 0:
             return self.insert_at_beginning(data)
-        if pos == self.size:
-            return self.insert_at_end(data)
         node = SNode(data)
-        curr = self.head
+        curr: SNode = self.head  # type: ignore[assignment]
         for _ in range(pos - 1):
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         node.nxt = curr.nxt
         curr.nxt = node
         self.size += 1
         return f"{GREEN}✅ Inserted {data} at position {pos}{RESET}"
 
-    def insert_after_value(self, target, data):
+    def insert_after_value(self, target: int, data: int) -> str:
         curr = self.head
         while curr:
             if curr.data == target:
@@ -89,7 +88,7 @@ class SinglyLinkedList:
         return f"{RED}❌ Value {target} not found{RESET}"
 
     # ── Delete ────────────────────────────────────────────
-    def delete_at_beginning(self):
+    def delete_at_beginning(self) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         val = self.head.data
@@ -97,7 +96,7 @@ class SinglyLinkedList:
         self.size -= 1
         return f"{GREEN}✅ Deleted {val} from beginning{RESET}"
 
-    def delete_at_end(self):
+    def delete_at_end(self) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         if not self.head.nxt:
@@ -105,47 +104,47 @@ class SinglyLinkedList:
             self.head = None
             self.size -= 1
             return f"{GREEN}✅ Deleted {val} from end{RESET}"
-        curr = self.head
-        while curr.nxt.nxt:
-            curr = curr.nxt
-        val = curr.nxt.data
+        curr: SNode = self.head
+        while curr.nxt and curr.nxt.nxt:
+            curr = curr.nxt  # type: ignore[assignment]
+        val = curr.nxt.data  # type: ignore[union-attr]
         curr.nxt = None
         self.size -= 1
         return f"{GREEN}✅ Deleted {val} from end{RESET}"
 
-    def delete_by_value(self, data):
+    def delete_by_value(self, data: int) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         if self.head.data == data:
             self.head = self.head.nxt
             self.size -= 1
             return f"{GREEN}✅ Deleted {data}{RESET}"
-        curr = self.head
+        curr: SNode = self.head
         while curr.nxt:
             if curr.nxt.data == data:
                 curr.nxt = curr.nxt.nxt
                 self.size -= 1
                 return f"{GREEN}✅ Deleted {data}{RESET}"
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         return f"{RED}❌ Value {data} not found{RESET}"
 
-    def delete_at_position(self, pos):
+    def delete_at_position(self, pos: int) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         if pos < 0 or pos >= self.size:
             return f"{RED}❌ Invalid position: {pos}{RESET}"
         if pos == 0:
             return self.delete_at_beginning()
-        curr = self.head
+        curr: SNode = self.head
         for _ in range(pos - 1):
-            curr = curr.nxt
-        val = curr.nxt.data
-        curr.nxt = curr.nxt.nxt
+            curr = curr.nxt  # type: ignore[assignment]
+        val = curr.nxt.data  # type: ignore[union-attr]
+        curr.nxt = curr.nxt.nxt  # type: ignore[union-attr]
         self.size -= 1
         return f"{GREEN}✅ Deleted {val} at position {pos}{RESET}"
 
     # ── Search & Access ───────────────────────────────────
-    def search(self, data):
+    def search(self, data: int) -> tuple[int, str]:
         curr = self.head
         index = 0
         while curr:
@@ -155,17 +154,18 @@ class SinglyLinkedList:
             index += 1
         return -1, f"{RED}❌ {data} not found{RESET}"
 
-    def get_at(self, pos):
+    def get_at(self, pos: int) -> tuple[Optional[int], str]:
         if pos < 0 or pos >= self.size:
             return None, f"{RED}❌ Invalid position{RESET}"
-        curr = self.head
+        curr: SNode = self.head  # type: ignore[assignment]
         for _ in range(pos):
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         return curr.data, f"{GREEN}✅ Value at {pos}: {curr.data}{RESET}"
 
     # ── Utility ───────────────────────────────────────────
-    def reverse(self):
-        prev, curr = None, self.head
+    def reverse(self) -> str:
+        prev: Optional[SNode] = None
+        curr = self.head
         while curr:
             nxt = curr.nxt
             curr.nxt = prev
@@ -174,47 +174,49 @@ class SinglyLinkedList:
         self.head = prev
         return f"{GREEN}✅ List reversed{RESET}"
 
-    def sort(self):
+    def sort(self) -> str:
         if not self.head or not self.head.nxt:
             return f"{YELLOW}ℹ️  Nothing to sort{RESET}"
-        # Bubble sort
         swapped = True
         while swapped:
             swapped = False
             curr = self.head
-            while curr.nxt:
+            while curr and curr.nxt:
                 if curr.data > curr.nxt.data:
                     curr.data, curr.nxt.data = curr.nxt.data, curr.data
                     swapped = True
                 curr = curr.nxt
         return f"{GREEN}✅ List sorted in ascending order{RESET}"
 
-    def find_middle(self):
+    def find_middle(self) -> tuple[Optional[int], str]:
         if not self.head:
             return None, f"{RED}❌ List is empty{RESET}"
-        slow = fast = self.head
+        slow = self.head
+        fast = self.head
         while fast and fast.nxt:
-            slow = slow.nxt
+            slow = slow.nxt  # type: ignore[assignment]
             fast = fast.nxt.nxt
-        return slow.data, f"{GREEN}✅ Middle element: {slow.data}{RESET}"
+        return slow.data, f"{GREEN}✅ Middle element: {slow.data}{RESET}"  # type: ignore[union-attr]
 
-    def detect_cycle(self):
-        slow = fast = self.head
+    def detect_cycle(self) -> tuple[bool, str]:
+        slow = self.head
+        fast = self.head
         while fast and fast.nxt:
-            slow = slow.nxt
+            slow = slow.nxt  # type: ignore[assignment]
             fast = fast.nxt.nxt
-            if slow == fast:
+            if slow is fast:
                 return True, f"{RED}⚠️  Cycle detected!{RESET}"
         return False, f"{GREEN}✅ No cycle detected{RESET}"
 
-    def to_list(self):
-        result, curr = [], self.head
+    def to_list(self) -> list:
+        result: list = []
+        curr = self.head
         while curr:
             result.append(curr.data)
-            curr = curr.nxt 
+            curr = curr.nxt
         return result
 
-    def display(self, title="Singly Linked List"):
+    def display(self, title: str = "Singly Linked List") -> None:
         if not self.head:
             print(f"  {YELLOW}  (empty list){RESET}")
             return
@@ -225,8 +227,8 @@ class SinglyLinkedList:
         print(f"\n  {BOLD}{title}{RESET} (size={self.size})")
         print(f"  HEAD → {chain}")
         print(f"  Indexes: ", end="")
-        for i, _ in enumerate(nodes):
-            print(f"{BLUE}[{i:^{len(str(nodes[i]))+2}}]{RESET}", end=" ")
+        for i, n in enumerate(nodes):
+            print(f"{BLUE}[{i:^{len(str(n))+2}}]{RESET}", end=" ")
         print()
 
 
@@ -238,20 +240,20 @@ class SinglyLinkedList:
 class DNode:
     """Node for Doubly Linked List"""
 
-    def __init__(self, data):
-        self.data = data
-        self.prv: Optional["DNode"] = None
-        self.nxt: Optional["DNode"] = None
+    def __init__(self, data: int) -> None:
+        self.data: int = data
+        self.prv: Optional[DNode] = None
+        self.nxt: Optional[DNode] = None
 
 
 class DoublyLinkedList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-        self.size = 0
+    def __init__(self) -> None:
+        self.head: Optional[DNode] = None
+        self.tail: Optional[DNode] = None
+        self.size: int = 0
 
     # ── Insert ────────────────────────────────────────────
-    def insert_at_beginning(self, data):
+    def insert_at_beginning(self, data: int) -> str:
         node = DNode(data)
         if not self.head:
             self.head = self.tail = node
@@ -262,7 +264,7 @@ class DoublyLinkedList:
         self.size += 1
         return f"{GREEN}✅ Inserted {data} at beginning{RESET}"
 
-    def insert_at_end(self, data):
+    def insert_at_end(self, data: int) -> str:
         node = DNode(data)
         if not self.tail:
             self.head = self.tail = node
@@ -273,7 +275,7 @@ class DoublyLinkedList:
         self.size += 1
         return f"{GREEN}✅ Inserted {data} at end{RESET}"
 
-    def insert_at_position(self, data, pos):
+    def insert_at_position(self, data: int, pos: int) -> str:
         if pos < 0 or pos > self.size:
             return f"{RED}❌ Invalid position: {pos}{RESET}"
         if pos == 0:
@@ -281,9 +283,9 @@ class DoublyLinkedList:
         if pos == self.size:
             return self.insert_at_end(data)
         node = DNode(data)
-        curr = self.head
+        curr: DNode = self.head  # type: ignore[assignment]
         for _ in range(pos - 1):
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         node.nxt = curr.nxt
         node.prv = curr
         if curr.nxt:
@@ -293,7 +295,7 @@ class DoublyLinkedList:
         return f"{GREEN}✅ Inserted {data} at position {pos}{RESET}"
 
     # ── Delete ────────────────────────────────────────────
-    def delete_by_value(self, data):
+    def delete_by_value(self, data: int) -> str:
         curr = self.head
         while curr:
             if curr.data == data:
@@ -310,57 +312,62 @@ class DoublyLinkedList:
             curr = curr.nxt
         return f"{RED}❌ Value {data} not found{RESET}"
 
-    def delete_at_beginning(self):
+    def delete_at_beginning(self) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         val = self.head.data
-        if self.head == self.tail:
+        if self.head is self.tail:
             self.head = self.tail = None
         else:
             self.head = self.head.nxt
-            self.head.prv = None
+            if self.head:
+                self.head.prv = None
         self.size -= 1
         return f"{GREEN}✅ Deleted {val} from beginning{RESET}"
 
-    def delete_at_end(self):
+    def delete_at_end(self) -> str:
         if not self.tail:
             return f"{RED}❌ List is empty{RESET}"
         val = self.tail.data
-        if self.head == self.tail:
+        if self.head is self.tail:
             self.head = self.tail = None
         else:
             self.tail = self.tail.prv
-            self.tail.nxt = None
+            if self.tail:
+                self.tail.nxt = None
         self.size -= 1
         return f"{GREEN}✅ Deleted {val} from end{RESET}"
 
     # ── Traversal ─────────────────────────────────────────
-    def traverse_forward(self):
-        result, curr = [], self.head
+    def traverse_forward(self) -> list:
+        result: list = []
+        curr = self.head
         while curr:
             result.append(curr.data)
             curr = curr.nxt
         return result
 
-    def traverse_backward(self):
-        result, curr = [], self.tail
+    def traverse_backward(self) -> list:
+        result: list = []
+        curr = self.tail
         while curr:
             result.append(curr.data)
             curr = curr.prv
         return result
 
-    def display(self):
+    def display(self) -> None:
         if not self.head:
             print(f"  {YELLOW}  (empty list){RESET}")
             return
         nodes = self.traverse_forward()
         forward = " ⇌ ".join(f"{CYAN}[{n}]{RESET}" for n in nodes)
-        backward = " ⇌ ".join(f"{BLUE}[{n}]{RESET}" for n in reversed(nodes))
         print(f"\n  {BOLD}Doubly Linked List{RESET} (size={self.size})")
         print(f"  {RED}NULL{RESET} ⇌ {forward} ⇌ {RED}NULL{RESET}")
         print(f"  Forward  : {' → '.join(str(n) for n in nodes)}")
         print(f"  Backward : {' → '.join(str(n) for n in reversed(nodes))}")
-        print(f"  HEAD: {self.head.data}  |  TAIL: {self.tail.data}")
+        print(
+            f"  HEAD: {self.head.data}  |  TAIL: {self.tail.data if self.tail else 'None'}"
+        )
 
 
 # ═══════════════════════════════════════════════════════════
@@ -369,59 +376,60 @@ class DoublyLinkedList:
 
 
 class CircularLinkedList:
-    def __init__(self):
-        self.head = None
-        self.size = 0
+    def __init__(self) -> None:
+        self.head: Optional[SNode] = None
+        self.size: int = 0
 
-    def insert(self, data):
+    def insert(self, data: int) -> str:
         node = SNode(data)
         if not self.head:
             self.head = node
             node.nxt = self.head
         else:
-            curr = self.head
-            while curr.nxt != self.head:
-                curr = curr.nxt
+            curr: SNode = self.head
+            while curr.nxt is not self.head:
+                curr = curr.nxt  # type: ignore[assignment]
             curr.nxt = node
             node.nxt = self.head
         self.size += 1
         return f"{GREEN}✅ Inserted {data} in circular list{RESET}"
 
-    def delete(self, data):
+    def delete(self, data: int) -> str:
         if not self.head:
             return f"{RED}❌ List is empty{RESET}"
         if self.head.data == data and self.size == 1:
             self.head = None
             self.size -= 1
             return f"{GREEN}✅ Deleted {data}{RESET}"
-        curr = self.head
-        while curr.nxt != self.head:
-            if curr.nxt.data == data:
+        curr: SNode = self.head
+        while curr.nxt is not self.head:
+            if curr.nxt and curr.nxt.data == data:
                 curr.nxt = curr.nxt.nxt
                 self.size -= 1
                 return f"{GREEN}✅ Deleted {data}{RESET}"
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         return f"{RED}❌ Value {data} not found{RESET}"
 
-    def display(self):
+    def display(self) -> None:
         if not self.head:
             print(f"  {YELLOW}  (empty circular list){RESET}")
             return
-        nodes, curr = [], self.head
+        nodes: list = []
+        curr: SNode = self.head
         for _ in range(self.size):
             nodes.append(curr.data)
-            curr = curr.nxt
+            curr = curr.nxt  # type: ignore[assignment]
         chain = " → ".join(f"{CYAN}[{n}]{RESET}" for n in nodes)
         print(f"\n  {BOLD}Circular Linked List{RESET} (size={self.size})")
         print(f"  {chain} → {GREEN}(back to HEAD: {self.head.data}){RESET}")
 
 
 # ── Display & Menu ────────────────────────────────────────
-def clear():
+def clear() -> None:
     os.system("cls" if os.name == "nt" else "clear")
 
 
-def display_banner():
+def display_banner() -> None:
     print("=" * 58)
     print("       🔗 LINKED LIST IMPLEMENTATION")
     print("       Author : Sameer Bansal | RA2311032010061")
@@ -429,7 +437,7 @@ def display_banner():
     print("=" * 58)
 
 
-def display_menu():
+def display_menu() -> None:
     print(f"""
   {BOLD}SINGLY LINKED LIST{RESET}
   [1]  Insert at beginning    [2]  Insert at end
@@ -457,10 +465,11 @@ def display_menu():
 """)
 
 
-def run_demo(sll, dll, cll):
+def run_demo(
+    sll: SinglyLinkedList, dll: DoublyLinkedList, cll: CircularLinkedList
+) -> None:
     print(f"\n  {BOLD}{CYAN}═══ FULL DEMO — ALL LINKED LIST OPERATIONS ═══{RESET}\n")
 
-    # Singly
     print(f"  {BOLD}── SINGLY LINKED LIST ──{RESET}")
     for v in [10, 20, 30, 40, 50]:
         print(f"  {sll.insert_at_end(v)}")
@@ -472,8 +481,8 @@ def run_demo(sll, dll, cll):
     _, msg = sll.get_at(3)
     print(f"  {msg}")
     print(f"  {sll.find_middle()[1]}")
-    _, msg = sll.detect_cycle()
-    print(f"  {msg}")
+    _, msg2 = sll.detect_cycle()
+    print(f"  {msg2}")
     print(f"  {sll.reverse()}")
     sll.display("After Reverse")
     print(f"  {sll.sort()}")
@@ -483,7 +492,6 @@ def run_demo(sll, dll, cll):
     print(f"  {sll.delete_at_end()}")
     sll.display("After Deletions")
 
-    # Doubly
     print(f"\n  {BOLD}── DOUBLY LINKED LIST ──{RESET}")
     for v in [100, 200, 300, 400]:
         print(f"  {dll.insert_at_end(v)}")
@@ -495,7 +503,6 @@ def run_demo(sll, dll, cll):
     print(f"  {dll.delete_at_end()}")
     dll.display()
 
-    # Circular
     print(f"\n  {BOLD}── CIRCULAR LINKED LIST ──{RESET}")
     for v in [1, 2, 3, 4, 5]:
         print(f"  {cll.insert(v)}")
@@ -504,19 +511,16 @@ def run_demo(sll, dll, cll):
     cll.display()
 
 
-def get_val(prompt):
+def get_val(prompt: str) -> int:
     val = input(f"  {prompt}: ").strip()
     try:
         return int(val)
     except ValueError:
-        try:
-            return float(val)
-        except ValueError:
-            return val
+        return 0
 
 
 # ── Main ──────────────────────────────────────────────────
-def main():
+def main() -> None:
     clear()
     display_banner()
 
@@ -524,7 +528,6 @@ def main():
     dll = DoublyLinkedList()
     cll = CircularLinkedList()
 
-    # Pre-load demo data
     for v in [10, 20, 30, 40, 50]:
         sll.insert_at_end(v)
     for v in [100, 200, 300]:
@@ -605,10 +608,7 @@ def main():
             elif choice == "24":
                 cll.display()
             elif choice == "25":
-                sll2 = SinglyLinkedList()
-                dll2 = DoublyLinkedList()
-                cll2 = CircularLinkedList()
-                run_demo(sll2, dll2, cll2)
+                run_demo(SinglyLinkedList(), DoublyLinkedList(), CircularLinkedList())
             elif choice == "menu":
                 display_menu()
             else:
